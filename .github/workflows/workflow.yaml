@@ -18,6 +18,7 @@ on:
       # Terraform action you want to perform
       action:
         description: 'Terraform Action to Perform'
+        required: true
         type: choice
         options:
         - Terraform_apply
