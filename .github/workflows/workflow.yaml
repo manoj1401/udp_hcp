@@ -7,15 +7,33 @@ on:
     branches:
     - main
     inputs:
-      test-run:
-        description: 'Test (y/n)?'
+      flutter_version:
+        description: 'Framework version'
         required: true
-        default: 'n'
+        default: '2.5.3'
+      publish_artifacts:
+        description: 'Publish artifacts'
+        required: true
+        default: 'true'
 
 jobs:
-  build:
+  build_web:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Yes branch
-        if: github.event.inputs.test-run == 'y'
-        run: echo "Test = Y"
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Set Flutter version
+        uses: subosito/flutter-action@v2.2.0
+        with:
+          flutter-version: '${{ github.event.inputs.flutter_version }}'
+
+      ## Build scripts here (see the complete example on GitHub)
+
+      - if: github.event.inputs.publish_artifacts == 'true'
+        name: Publish Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: build/web
