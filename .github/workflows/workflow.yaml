@@ -27,7 +27,7 @@ on:
 jobs:
   terraform_apply:
     name: "Terraform_apply"
-    if:  github.event.inputs.action.options == 'Terraform_apply' && github.event.inputs.action == 'true'
+    if:  github.event.inputs.action == 'Terraform_apply'
     runs-on: ubuntu-latest
     defaults:
       run:
