@@ -23,15 +23,14 @@ on:
         options:
         - Terraform_apply
         - Terraform_destroy
-
+defaults:
+      run:
+        shell: bash
 jobs:
   terraform_apply:
     name: "Terraform_apply"
     if: ${{ github.event.inputs.action == 'Terraform_apply' && github.event.inputs.action == 'true' }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
 #    defaults:
 #      run:
 #        working-directory: ${{ github.event.inputs.resource }}
