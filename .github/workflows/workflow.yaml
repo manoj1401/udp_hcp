@@ -3,6 +3,9 @@ name: 'Terraform CI'
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+    - main
     inputs:
       test-run:
         description: 'Test (y/n)?'
