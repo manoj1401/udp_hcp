@@ -2,27 +2,27 @@
 name: 'Terraform CI'
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - main
-  pull_request:
-  workflow_dispatch:
-    inputs:
+  # pull_request:
+  inputs:
       # Working directory input from user.
-      resource:
-        type: choice
-        description: Choose the resource
-        options:
-        - name_of_dir1
-        - name_of_dir2
+    resource:
+      type: choice
+      description: Choose the resource
+      options:
+      - name_of_dir1
+      - name_of_dir2
       # Terraform action you want to perform
-      action:
-        description: 'Terraform Action to Perform'
-        required: true
-        type: choice
-        options:
-        - Terraform_apply
-        - Terraform_destroy
+    action:
+      description: 'Terraform Action to Perform'
+      required: true
+      type: choice
+      options:
+      - Terraform_apply
+      - Terraform_destroy
 
 jobs:
   terraform_apply:
