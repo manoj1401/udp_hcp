@@ -3,81 +3,15 @@ name: 'Terraform CI'
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-    - main
-  # pull_request:
     inputs:
-      # Working directory input from user.
-      resource:
-        type: choice
-        description: Choose the resource
-        options:
-        - name_of_dir1
-        - name_of_dir2
-      # Terraform action you want to perform
-      action:
-        description: 'Terraform Action to Perform'
+      test-run:
+        description: 'Test (y/n)?'
         required: true
-        type: choice
-        options:
-        - Terraform_apply
-        - Terraform_destroy
+        default: 'y'
 
 jobs:
-  terraform_apply:
-    name: "Terraform_apply"
- #   if: github.event_name.inputs.action == 'true'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-#    defaults:
-#      run:
-#        working-directory: ${{ github.event.inputs.resource }}
+  build:
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-
-      - name: Terraform Apply
-        id: apply
-        run: terraform apply
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-  
-  terraform_destroy:
-    name: "Terraform_destroy"
-    if: ${{ github.event.inputs.action == 'Terraform_destroy' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      
-      - name: Terraform Destroy
-        id: destroy
-#        working-directory: ${{ github.event.inputs.resource }}
-        run: terraform destroy
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      - name: Yes branch
+        if: github.event.inputs.test-run == 'y'
+        run: echo "Test = Y"
