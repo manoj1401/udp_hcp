@@ -13,8 +13,8 @@ on:
         default: 'y'
 
 jobs:
-  runs-on: ubuntu-latest
   build:
+    runs-on: ubuntu-latest
     steps:
       - name: Yes branch
         if: github.event.inputs.test-run == 'y'
