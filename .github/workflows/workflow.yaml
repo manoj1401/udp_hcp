@@ -3,37 +3,81 @@ name: 'Terraform CI'
 
 on:
   workflow_dispatch:
-  #push:
-  #  branches:
-  #  - main
+  push:
+    branches:
+    - main
+  # pull_request:
     inputs:
-      flutter_version:
-        description: 'Framework version'
+      # Working directory input from user.
+      resource:
+        type: choice
+        description: Choose the resource
+        options:
+        - name_of_dir1
+        - name_of_dir2
+      # Terraform action you want to perform
+      action:
+        description: 'Terraform Action to Perform'
         required: true
-        default: '2.5.3'
-      publish_artifacts:
-        description: 'Publish artifacts'
-        required: true
-        default: 'true'
+        type: choice
+        options:
+        - Terraform_apply
+        - Terraform_destroy
 
 jobs:
-  build_web:
+  terraform_apply:
+    name: "Terraform_apply"
+    if: github.event_name.inputs.action == 'true'
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
+#    defaults:
+#      run:
+#        working-directory: ${{ github.event.inputs.resource }}
     steps:
-      - name: Checkout the code
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Flutter version
-        uses: subosito/flutter-action@v2.2.0
-        with:
-          flutter-version: '${{ github.event.inputs.flutter_version }}'
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
 
-      ## Build scripts here (see the complete example on GitHub)
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
-      - if: github.event.inputs.publish_artifacts == 'true'
-        name: Publish Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts
-          path: build/web
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  
+  terraform_destroy:
+    name: "Terraform_destroy"
+    if: ${{ github.event.inputs.action == 'Terraform_destroy' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
+      - name: Terraform Destroy
+        id: destroy
+#        working-directory: ${{ github.event.inputs.resource }}
+        run: terraform destroy
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
