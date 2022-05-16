@@ -10,7 +10,7 @@ on:
       test-run:
         description: 'Test (y/n)?'
         required: true
-        default: 'y'
+        default: 'n'
 
 jobs:
   build:
