@@ -1,0 +1,38 @@
+name: 'Test CI/CD'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    inputs:
+      flutter_version:
+        description: 'Framework version'
+        required: true
+        default: '2.5.3'
+      publish_artifacts:
+        description: 'Publish artifacts'
+        required: true
+        default: 'true'
+
+jobs:
+  build_web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Set Flutter version
+        uses: subosito/flutter-action@v2.2.0
+        with:
+          flutter-version: '${{ github.event.inputs.flutter_version }}'
+
+      ## Build scripts here (see the complete example on GitHub)
+
+      - if: github.event.inputs.publish_artifacts == 'true'
+        name: Publish Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: build/web
