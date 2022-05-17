@@ -50,7 +50,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply
+        run: terraform apply -auto-approve -input=false
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
   
@@ -74,6 +74,6 @@ jobs:
       - name: Terraform Destroy
         id: destroy
 #        working-directory: ${{ github.event.inputs.resource }}
-        run: terraform destroy
+        run: terraform destroy -auto-approve -input=false
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
