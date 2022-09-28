@@ -32,7 +32,7 @@ jobs:
       with:        
         resource-group-name: 'cohotfstate'
 #        managed-identity: 'imageidentity'
-        location: 'centralus'
+        location: 'eastus2'
 #        source-image-type: 'ManagedImage'
         source-os-type: 'Windows'  
         source-image: microsoftwindowsdesktop:office-365:win10-21h2-avd-m365-g2:latest
