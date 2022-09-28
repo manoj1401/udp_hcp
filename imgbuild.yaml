@@ -1,0 +1,45 @@
+name: 'Image Build'
+
+on:
+  #workflow_dispatch:
+  push:
+    branches:
+      - imgbuild
+
+jobs:
+  BUILD-CUSTOM-IMAGE:
+    runs-on: ubuntu-latest    
+    steps:
+    - name: CHECKOUT
+      uses: actions/checkout@v2
+  
+
+    - name: AZURE LOGIN 
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}     
+    
+    # - name: Azure CLI script
+    #   uses: azure/CLI@v1
+    #   with:
+    #     azcliversion: 2.30.0
+    #     inlineScript: |
+    #       az policy assignment list -g coho-image-gallery-rg-prd
+
+    - name: Create custom VM image
+      id: imageBuilder
+      uses: azure/build-vm-image@v0   #azure/azureimagebuilder@v0
+      with:        
+        resource-group-name: 'cohotfstate'
+#        managed-identity: 'imageidentity'
+        location: 'centralus'
+#        source-image-type: 'ManagedImage'
+        source-os-type: 'Windows'  
+        source-image: microsoftwindowsdesktop:office-365:win10-21h2-avd-m365-g2:latest
+        build-timeout-in-minutes: 20
+        #source-image: MicrosoftWindowsServer:WindowsServer:2022-datacenter-g2:latest  
+        # customizer-script: |
+        #   & 'c:\workflow-artifacts\webApp\windows_post_deploy_template.ps1'
+        dist-type: 'SharedImageGallery'
+        dist-resource-id: '/subscriptions/b3f9ba5a-7fdd-4352-8f64-b139f1cdb19f/resourceGroups/coho-image-gallery-rg-prd/providers/Microsoft.Compute/galleries/cohosharedimage/images/cohowindowsvmo365'
+        dist-location: 'centralus'
